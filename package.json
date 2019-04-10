@@ -1,0 +1,23 @@
+{
+  "name": "selenium-webdriver-practice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashalkey/selenium-webdriver-practice.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ashalkey/selenium-webdriver-practice/issues"
+  },
+  "homepage": "https://github.com/ashalkey/selenium-webdriver-practice#readme",
+  "dependencies": {
+    "dotenv": "^7.0.0",
+    "selenium-webdriver": "^4.0.0-alpha.1"
+  }
+}
