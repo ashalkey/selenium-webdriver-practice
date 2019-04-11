@@ -33,7 +33,8 @@ const { Builder, By, Key, until } = require('selenium-webdriver');
             }
         }
 
-        await driver.wait(until.elementLocated(By.linkText("New Post")), 5000);
+        await driver.wait(until.elementLocated(By.linkText("New Post")), 10000);
+        await driver.wait(until.elementsLocated(By.className(`list-group-item-heading`)));
         let posts = await driver.findElements(By.className(`list-group-item-heading`));
         let postText = [];
         await posts.map(async (e) => {

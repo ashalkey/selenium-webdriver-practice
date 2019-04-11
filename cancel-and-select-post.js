@@ -34,7 +34,7 @@ const { Builder, By, Key, until } = require('selenium-webdriver');
 
         }
         finally {
-            await driver.quit();
+            // await driver.quit();
         }
     
 })();
