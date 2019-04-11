@@ -1,18 +1,19 @@
 require('dotenv').config();
 const { Builder, By, Key, until } = require('selenium-webdriver');
+let browser = process.argv[2].toLowerCase();
 
-if (!process.argv[2]) {
+if (!browser) {
 
     console.log("\nPlease provide the browser you would like to test after providing the name of the javascript file \n");
     console.log("Supported browsers include: \n chrome \n firefox");
 }
 else {
-    (async function checkPostOrder() {
+    (async function deletePosts() {
 
 
 
         let driver = await new Builder().forBrowser(`${process.argv[2].toLowerCase()}`).build();
-        let numberOfPosts = 3;
+        let numOfPostsToDelete = 3;
 
         try {
             await driver.get('https://login.salesforce.com');
@@ -24,28 +25,30 @@ else {
             await driver.wait(until.titleIs("React Redux Blog | Salesforce"));
             await driver.switchTo().frame(driver.findElement(By.xpath("//iframe[contains(@name, 'vfFrameId')]")));
 
-            await driver.findElement(By.linkText('New Post')).click();
+            if (browser === 'chrome')
+            for (let i = 1; i <= numOfPostsToDelete; i++) {
+                await driver.wait(until.elementLocated(By.linkText(`test ${i}`))).click();
+                await driver.wait(until.elementLocated(By.xpath("//*[text() = 'Delete Post']"))).click();
+            }
+            else {
+                await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+                for (let i = 1; i <= numOfPostsToDelete; i++) {
+    
+                        await driver.wait(until.elementLocated(By.xpath(`//*[text() = 'test ${i}']`))).click();
+                        await driver.wait(until.elementLocated(By.xpath("//*[text() = 'Delete Post']"))).click();
 
-            for (let i = 1; i <= numberOfPosts; i++) {
-                await driver.findElement(By.name("Name")).clear();
-                await driver.findElement(By.name("Categories__c")).clear();
-                await driver.findElement(By.name("Content__c")).clear();
-                await driver.findElement(By.name("Name")).sendKeys(`test ${i}`);
-                await driver.findElement(By.name("Categories__c")).sendKeys(`test ${i}`);
-                await driver.findElement(By.name("Content__c")).sendKeys(`test ${i}`);
-                await driver.findElement(By.className("btn btn-primary")).click();
-                if(i < numberOfPosts) {
-                    await driver.wait(until.elementLocated(By.linkText('New Post')), 10000).click();
                 }
             }
-            await driver.findElements(By.className('list-group-item-heading'))
-            // await driver.wait(until.elementLocated(By.linkText("test 1"))).click();
-
+            let posts = await driver.findElements(By.className(`list-group-item`));
+            console.log(posts);
+            if(!posts[0]) {
+                console.log("\nAll posts have been deleted successfully!");
+            }
         }
-
         finally {
             // await driver.quit();
         }
+    
+})();
 
-    })();
 }
