@@ -1,17 +1,9 @@
 require('dotenv').config();
 const { Builder, By, Key, until } = require('selenium-webdriver');
 
-if (!process.argv[2]) {
-
-    console.log("\nPlease provide the browser you would like to test after providing the name of the javascript file \n");
-    console.log("Supported browsers include: \n chrome \n firefox");
-}
-else {
     (async function cancelNewPost() {
 
-
-
-        let driver = await new Builder().forBrowser(`${process.argv[2].toLowerCase()}`).build();
+        let driver = await new Builder().forBrowser(`chrome`).build();
 
         try {
             await driver.get('https://login.salesforce.com');
@@ -30,10 +22,15 @@ else {
 
             await driver.findElement(By.linkText("Cancel")).click();
 
-            await driver.wait(until.elementLocated(By.linkText("New Post")), 5000).then(() => {
+            await driver.wait(until.elementLocated(By.linkText("New Post")), 5000).then(async () => {
                 console.log("\nNew post creation has been cancelled successfully!");
+                await driver.findElement(By.linkText("test 1")).click();
+                await driver.wait(until.elementLocated(By.xpath(`//*[text() = "test 1"]`)));
+                console.log("\nPost information is viewable!");
             }
             );
+
+   
 
         }
         finally {
@@ -41,5 +38,3 @@ else {
         }
     
 })();
-
-}

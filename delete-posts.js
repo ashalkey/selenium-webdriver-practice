@@ -1,18 +1,11 @@
 require('dotenv').config();
 const { Builder, By, Key, until } = require('selenium-webdriver');
-let browser = process.argv[2].toLowerCase();
 
-if (!browser) {
-
-    console.log("\nPlease provide the browser you would like to test after providing the name of the javascript file \n");
-    console.log("Supported browsers include: \n chrome \n firefox");
-}
-else {
     (async function deletePosts() {
 
 
 
-        let driver = await new Builder().forBrowser(`${process.argv[2].toLowerCase()}`).build();
+        let driver = await new Builder().forBrowser(`chrome`).build();
         let numOfPostsToDelete = 3;
 
         try {
@@ -25,20 +18,11 @@ else {
             await driver.wait(until.titleIs("React Redux Blog | Salesforce"));
             await driver.switchTo().frame(driver.findElement(By.xpath("//iframe[contains(@name, 'vfFrameId')]")));
 
-            if (browser === 'chrome')
             for (let i = 1; i <= numOfPostsToDelete; i++) {
                 await driver.wait(until.elementLocated(By.linkText(`test ${i}`))).click();
                 await driver.wait(until.elementLocated(By.xpath("//*[text() = 'Delete Post']"))).click();
             }
-            else {
-                await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-                for (let i = 1; i <= numOfPostsToDelete; i++) {
-    
-                        await driver.wait(until.elementLocated(By.xpath(`//*[text() = 'test ${i}']`))).click();
-                        await driver.wait(until.elementLocated(By.xpath("//*[text() = 'Delete Post']"))).click();
 
-                }
-            }
             let posts = await driver.findElements(By.className(`list-group-item`));
             console.log(posts);
             if(!posts[0]) {
@@ -46,9 +30,8 @@ else {
             }
         }
         finally {
-            // await driver.quit();
+            await driver.quit();
         }
     
 })();
 
-}
